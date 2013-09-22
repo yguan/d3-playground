@@ -46,7 +46,7 @@ div.chart {
     stroke: black;
 }
 
-circle {
+.defaultCircle {
     stroke: black;
     stroke-width: 0.5px;
     fill: RoyalBlue;

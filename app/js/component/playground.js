@@ -17,7 +17,9 @@
 define(function (require, exports, module) {
     var bubbleChart = require('component/sample-bubble-chart'),
         vBars = require('component/vertical-div-bar'),
-        hBars = require('component/horizontal-div-bar');
+        hBars = require('component/horizontal-div-bar'),
+        svgVBar = require('component/svg-vertical-bar'),
+        scatterplot = require('component/scatterplot');
 
     exports.run = function () {
         'use strict';
@@ -25,19 +27,24 @@ define(function (require, exports, module) {
         bubbleChart.create();
 
         var hBarsData = [
-            {
-                'count': 2677,
-                'name': 'Robert F. Kennedy Bridge Bronx Plaza'
-            },
-            {
-                'count': 560,
-                'name': 'Robert'
-            },
-            {
-                'count': 1345,
-                'name': 'something else'
-            }
-        ];
+                {
+                    'count': 2677,
+                    'name': 'Robert F. Kennedy Bridge Bronx Plaza'
+                },
+                {
+                    'count': 560,
+                    'name': 'Robert'
+                },
+                {
+                    'count': 1345,
+                    'name': 'something else'
+                }
+            ],
+            vBarData = [ 5, 10, 15, 20, 25 ],
+            scatterplotData = [
+                [5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
+                [410, 12], [475, 44], [25, 67], [85, 21], [220, 88]
+            ];
 
         hBars.create({
             container: d3.select('body').append('div').attr('class', 'chart'),
@@ -52,9 +59,33 @@ define(function (require, exports, module) {
         vBars.create({
             container: d3.select('body').append('div'),
             barCls: 'teal-vbar',
-            data: [ 5, 10, 15, 20, 25 ],
+            data: vBarData,
             range: [0, 100]
         });
+
+        svgVBar.create({
+            svg: d3.select('body').append('svg').attr('width', '200px').attr('height', '150px'),
+            barPadding: 2,
+            height: 150,
+            width: 200,
+            labelColor: 'black',
+            labelBottomPadding: 5,
+            data: vBarData,
+            range: [20, 150]
+        });
+
+        scatterplot.create({
+            svg: d3.select('body').append('svg').attr('width', '200px').attr('height', '150px'),
+            height: 150,
+            width: 200,
+            dotCls: 'defaultCircle',
+            labelColor: 'black',
+            dotRadius: 10,
+            data: scatterplotData,
+            xRange: [0, 200],
+            yRange: [0, 150]
+        });
+
     };
 });
 

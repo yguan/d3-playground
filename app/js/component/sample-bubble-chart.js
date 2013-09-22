@@ -28,6 +28,7 @@ define(function (require, exports, module) {
             .data(collision)
             .enter()
             .append('circle')
+            .attr('class', 'defaultCircle')
             .attr('cx', function (d) {
                 return x_scale(d.n);
             })

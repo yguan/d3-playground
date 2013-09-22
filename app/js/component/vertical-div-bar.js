@@ -15,6 +15,7 @@ define(function(require, exports, module) {
         var scale = linearScale.create(config.data, config.valueKey, config.range);
 
         config.container
+            .selectAll('div')
             .data(config.data)
             .enter()
             .append('div')
