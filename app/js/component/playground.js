@@ -1,4 +1,5 @@
-/*global define,d3 */
+/*jslint nomen: true*/
+/*global define,d3,_ */
 define(function (require, exports, module) {
     'use strict';
 
@@ -9,7 +10,7 @@ define(function (require, exports, module) {
         svgVBar = require('component/svg-vertical-bar'),
         scatterplot = require('component/scatterplot'),
         axis = require('component/axis'),
-        vbars = require('component/vbars'),
+        vbars = require('component/vbars-updatable'),
         hBarsData = [
             {
                 'count': 2677,
@@ -76,7 +77,7 @@ define(function (require, exports, module) {
         var axisRegionWidth = 30,
             height = 200,
             width = 300,
-            svg = d3.select('body').append('svg').attr('width', width + 'px').attr('height', height + 'px'),
+            svg = d3.select('#svgCollections').append('svg').attr('width', width + 'px').attr('height', height + 'px'),
             xRange = [axisRegionWidth, 300],
             yRange = [0, height - axisRegionWidth],
             xScale = linearScale.create({data: scatterplotData, range: xRange, getValueFn: function (d) {
@@ -119,7 +120,7 @@ define(function (require, exports, module) {
     function createVbars() {
         var height = 200,
             width = 300,
-            svg = d3.select('body').append('svg').attr('width', width + 'px').attr('height', height + 'px'),
+            svg = d3.select('#svgCollections').append('svg').attr('width', width + 'px').attr('height', height + 'px'),
             xRange = [0, width],
             xScale = d3.scale.ordinal()
                 .domain(d3.range(vBarData.length))
@@ -141,13 +142,53 @@ define(function (require, exports, module) {
         });
     }
 
+    function createUpdatableVbars() {
+        var height = 200,
+            width = 300,
+            svg = d3.select('#svgCollections').append('svg').attr('width', width + 'px').attr('height', height + 'px'),
+            xRange = [0, width],
+            xScale = d3.scale.ordinal()
+                .domain(d3.range(vBarData.length))
+                .rangeRoundBands(xRange, 0.1),
+            getValueFn = function (d) {
+                return d;
+            },
+            vbarsInstance,
+            newData = _.clone(vBarData);
+
+        vbarsInstance = vbars.create({
+            svg: svg,
+            height: height,
+            width: width,
+            labelCls: 'vbar-label',
+            barCls: 'yellowish-fill',
+            labelBottomPadding: 10,
+            data: vBarData,
+            xScale: xScale,
+            getValueFn: getValueFn
+        });
+
+        svg.on('click', function () {
+            _.each(newData, function (d, i) {
+                newData[i] = (d + 11) % 30;
+            });
+            vbarsInstance.update({
+                data: newData,
+                xScale: xScale,
+                transitionDuration: 500,
+                getValueFn: getValueFn
+            });
+        });
+    }
+
     exports.run = function () {
+        createUpdatableVbars();
+        createVbars();
+        createScatterplot();
+        createSvgVBars();
         bubbleChart.create();
         createHBars();
         createDivVBars();
-        createSvgVBars();
-        createScatterplot();
-        createVbars();
     };
 });
 
