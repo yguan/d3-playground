@@ -1,4 +1,6 @@
+/*global define,d3 */
 define(function (require, exports, module) {
+    'use strict';
 
     var linearScale = require('component/linear-scale'),
         dataAccessor = require('data/data-accessor');
@@ -19,7 +21,10 @@ define(function (require, exports, module) {
      * @param {array} config.range
      */
     exports.create = function (config) {
-        var scale = linearScale.create(config.data, config.valueKey, config.range),
+        var getValueFn = function (d) {
+                return config.valueKey ? d[config.valueKey] : d;
+            },
+            scale = linearScale.create({data: config.data, range: config.range, getValueFn: getValueFn}),
             chartOrigin = {
                 x: config.x || 0,
                 y: config.y || config.height

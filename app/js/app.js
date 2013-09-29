@@ -1,3 +1,5 @@
+/*global require */
+
 require.config({
     baseUrl: 'js',
     paths: {
@@ -12,10 +14,12 @@ require([
     'lib/d3',
     'lib/lodash.underscore',
     'extension/lodash.underscore'
-], function() {
+], function () {
+    'use strict';
+
     require([
         'component/playground'
-    ], function(playground) {
+    ], function (playground) {
         playground.run();
     });
 });

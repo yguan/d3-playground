@@ -1,4 +1,6 @@
+/*global define,d3 */
 define(function (require, exports, module) {
+    'use strict';
 
     /**
      * Create vertical bars with div
@@ -13,26 +15,14 @@ define(function (require, exports, module) {
      * @param {int} config.dotCls
      * @param {int} config.labelColor
      * @param {array} config.data
-     * @param {array} config.xRange
-     * @param {array} config.yRange
+     * @param {array} config.xScale
+     * @param {array} config.yScale
      */
     exports.create = function (config) {
-        var xExtend = d3.extent(config.data, function (d) {
-                return d[0];
-            }),
-            yExtend = d3.extent(config.data, function (d) {
-                return d[1];
-            }),
-            xScale = d3.scale.linear()
-                .domain(xExtend)
-                .range(config.xRange),
-            yScale = d3.scale.linear()
-                .domain(yExtend)
-                .range(config.yRange),
-            chartOrigin = {
-                x: config.x || 0,
-                y: config.y || config.height
-            };
+        var chartOrigin = {
+            x: config.x || 0,
+            y: config.y || config.height
+        };
 
         // append bars
         config.svg.selectAll('circle')
@@ -41,10 +31,10 @@ define(function (require, exports, module) {
             .append('circle')
             .attr('class', config.dotCls)
             .attr('cx', function (d) {
-                return xScale(d[0]);
+                return config.xScale(d[0]);
             })
             .attr('cy', function (d) {
-                return yScale(d[1]);
+                return config.yScale(d[1]);
             })
             .attr('r', config.dotRadius);
 
@@ -60,10 +50,10 @@ define(function (require, exports, module) {
             .attr('font-size', '11px')
             .attr('fill', config.labelColor)
             .attr('x', function (d, i) {
-                return xScale(d[0]) + config.dotRadius;
+                return config.xScale(d[0]) + config.dotRadius;
             })
             .attr('y', function (d) {
-                return yScale(d[1]);
+                return config.yScale(d[1]);
             });
     };
 

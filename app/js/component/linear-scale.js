@@ -1,17 +1,18 @@
+/*global define,d3 */
 define(function (require, exports, module) {
+    'use strict';
+
     /**
      * Create linear scale
-     * @param data
-     * @param valueKey
-     * @param range
+     * @param config
+     * @param {array} config.data
+     * @param {array} config.range
+     * @param {function} config.getValueFn
      * @returns {linear scale}
      */
-    exports.create = function (data, valueKey, range) {
-        var extent = d3.extent(data, function (d) {
-            return valueKey ? d[valueKey] : d;
-        });
+    exports.create = function (config) {
         return d3.scale.linear()
-            .range(range)
-            .domain(extent);
+            .range(config.range)
+            .domain(d3.extent(config.data, config.getValueFn));
     };
 });

@@ -1,4 +1,7 @@
+/*global define,d3 */
 define(function (require, exports, module) {
+    'use strict';
+
     exports.create = function () {
         var collision = [
                 {n: 2000},
@@ -59,5 +62,5 @@ define(function (require, exports, module) {
             .append('text')
             .text('mean distance between failure (miles)')
             .attr('transform', 'rotate (-90, -43, 0) translate(-280)');
-    }
+    };
 });

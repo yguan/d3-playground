@@ -1,4 +1,6 @@
-define(function(require, exports, module) {
+/*global define,d3 */
+define(function (require, exports, module) {
+    'use strict';
 
     var linearScale = require('component/linear-scale');
 
@@ -12,7 +14,10 @@ define(function(require, exports, module) {
      * @param {String} config.range
      */
     exports.create = function (config) {
-        var scale = linearScale.create(config.data, config.valueKey, config.range);
+        var getValueFn = function (d) {
+                return config.valueKey ? d[config.valueKey] : d;
+            },
+            scale = linearScale.create({data: config.data, range: config.range, getValueFn: getValueFn});
 
         config.container
             .selectAll('div')
