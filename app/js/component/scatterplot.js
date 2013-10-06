@@ -19,11 +19,6 @@ define(function (require, exports, module) {
      * @param {array} config.yScale
      */
     exports.create = function (config) {
-        var chartOrigin = {
-            x: config.x || 0,
-            y: config.y || config.height
-        };
-
         // append bars
         config.svg.selectAll('circle')
             .data(config.data)

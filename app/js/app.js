@@ -6,7 +6,8 @@ require.config({
         lib: './lib',
         data: './data',
         component: './component',
-        extension: './extension'
+        extension: './extension',
+        samples: './samples'
     }
 });
 
@@ -18,9 +19,9 @@ require([
     'use strict';
 
     require([
-        'component/playground'
-    ], function (playground) {
-        playground.run();
+        'samples/all-samples'
+    ], function (samples) {
+        samples.run();
     });
 });
 

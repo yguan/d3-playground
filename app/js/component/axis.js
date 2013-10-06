@@ -25,9 +25,7 @@ define(function (require, exports, module) {
      */
     exports.create = function (config) {
         var translate = config.translate || [0, 0],
-            axis = d3.svg.axis()
-                .scale(config.scale)
-                .orient(config.orient),
+            axis = d3.svg.axis().scale(config.scale).orient(config.orient),
             svgAxis;
 
         if (config.ticks) {

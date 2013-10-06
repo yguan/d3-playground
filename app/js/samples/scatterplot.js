@@ -4,28 +4,8 @@ define(function (require, exports, module) {
     'use strict';
 
     var linearScale = require('component/linear-scale'),
-        bubbleChart = require('component/sample-bubble-chart'),
-        vBars = require('component/vertical-div-bar'),
-        hBars = require('component/horizontal-div-bar'),
-        svgVBar = require('component/svg-vertical-bar'),
         scatterplot = require('component/scatterplot-updatable'),
         axis = require('component/axis'),
-        vbars = require('component/vbars-updatable'),
-        hBarsData = [
-            {
-                'count': 2677,
-                'name': 'Robert F. Kennedy Bridge Bronx Plaza'
-            },
-            {
-                'count': 560,
-                'name': 'Robert'
-            },
-            {
-                'count': 1345,
-                'name': 'something else'
-            }
-        ],
-        vBarData = [ 5, 10, 15, 20, 25 ],
         scatterplotData = [
             [5, 20],
             [480, 90],
@@ -39,45 +19,11 @@ define(function (require, exports, module) {
             [220, 88]
         ];
 
-    function createHBars() {
-        hBars.create({
-            container: d3.select('body').append('div').attr('class', 'chart'),
-            barCls: 'hbar',
-            barLabelCls: 'hbar-label',
-            data: hBarsData,
-            labelKey: 'name',
-            valueKey: 'count',
-            range: [50, 200]
-        });
-    }
-
-    function createDivVBars() {
-        vBars.create({
-            container: d3.select('body').append('div'),
-            barCls: 'teal-vbar',
-            data: vBarData,
-            range: [0, 100]
-        });
-    }
-
-    function createSvgVBars() {
-        svgVBar.create({
-            svg: d3.select('body').append('svg').attr('width', '200px').attr('height', '150px'),
-            barPadding: 2,
-            height: 150,
-            width: 200,
-            labelColor: 'black',
-            labelBottomPadding: 5,
-            data: vBarData,
-            range: [20, 150]
-        });
-    }
-
-    function createScatterplot() {
+    function createScatterplot(container) {
         var axisRegionWidth = 30,
             height = 200,
             width = 300,
-            svg = d3.select('#svgCollections').append('svg').attr('width', width + 'px').attr('height', height + 'px'),
+            svg = container.append('svg').attr('width', width + 'px').attr('height', height + 'px'),
             xRange = [axisRegionWidth, 300],
             yRange = [0, height - axisRegionWidth],
             xScale = linearScale.create({data: scatterplotData, range: xRange, getValueFn: function (d) {
@@ -160,11 +106,11 @@ define(function (require, exports, module) {
         });
     }
 
-    function createScatterplotUpdatable() {
+    function createScatterplotUpdatable(container) {
         var axisRegionWidth = 30,
             height = 200,
             width = 300,
-            svg = d3.select('#svgCollections').append('svg').attr('width', width + 'px').attr('height', height + 'px'),
+            svg = container.append('svg').attr('width', width + 'px').attr('height', height + 'px'),
             xRange = [axisRegionWidth, 300],
             yRange = [0, height - axisRegionWidth],
             xScale = linearScale.create({data: scatterplotData, range: xRange, getValueFn: function (d) {
@@ -235,88 +181,10 @@ define(function (require, exports, module) {
         //yScale.domain([minY, maxY]);
     }
 
-    function createVbars() {
-        var height = 200,
-            width = 300,
-            svg = d3.select('#svgCollections').append('svg').attr('width', width + 'px').attr('height', height + 'px'),
-            xRange = [0, width],
-            xScale = d3.scale.ordinal()
-                .domain(d3.range(vBarData.length))
-                .rangeRoundBands(xRange, 0.1),
-            getValueFn = function (d) {
-                return d;
-            },
-            vbarsInstance,
-            sortOrder = {
-                asc: true
-            };
-
-        vbarsInstance = vbars.create({
-            svg: svg,
-            height: height,
-            width: width,
-            labelCls: 'vbar-label',
-            barCls: 'yellowish-fill',
-            labelBottomPadding: 10,
-            data: vBarData,
-            xScale: xScale,
-            getValueFn: getValueFn
-        });
-
-        svg.on('click', function () {
-            sortOrder.asc = !sortOrder.asc;
-            vbarsInstance.sort(sortOrder);
-        });
-    }
-
-    function createUpdatableVbars() {
-        var height = 200,
-            width = 300,
-            svg = d3.select('#svgCollections').append('svg').attr('width', width + 'px').attr('height', height + 'px'),
-            xRange = [0, width],
-            xScale = d3.scale.ordinal()
-                .domain(d3.range(vBarData.length))
-                .rangeRoundBands(xRange, 0.1),
-            getValueFn = function (d) {
-                return d;
-            },
-            vbarsInstance,
-            newData = _.clone(vBarData);
-
-        vbarsInstance = vbars.create({
-            svg: svg,
-            height: height,
-            width: width,
-            labelCls: 'vbar-label',
-            barCls: 'yellowish-fill',
-            labelBottomPadding: 10,
-            data: vBarData,
-            xScale: xScale,
-            getValueFn: getValueFn
-        });
-
-        svg.on('click', function () {
-            _.each(newData, function (d, i) {
-                newData[i] = (d + 11) % 30;
-            });
-            vbarsInstance.update({
-                data: newData,
-                xScale: xScale,
-                transitionDuration: 500,
-                getValueFn: getValueFn
-            });
-        });
-    }
-
     exports.run = function () {
-        createUpdatableVbars();
-        createVbars();
-        createScatterplotUpdatable();
-        createScatterplot();
-        createSvgVBars();
-        bubbleChart.create();
-        createHBars();
-        createDivVBars();
+        var container = d3.select('body').append('div');
+        createScatterplotUpdatable(container);
+        createScatterplot(container);
     };
 });
 

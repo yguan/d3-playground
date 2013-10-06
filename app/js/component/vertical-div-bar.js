@@ -7,11 +7,11 @@ define(function (require, exports, module) {
     /**
      * Create vertical bars with div
      * @param config
-     * @param {String} config.container
+     * @param {d3 object} config.container
      * @param {String} config.barCls
-     * @param {String} config.data
+     * @param {Array} config.data
      * @param {String} config.valueKey
-     * @param {String} config.range
+     * @param {Array} config.range
      */
     exports.create = function (config) {
         var getValueFn = function (d) {
